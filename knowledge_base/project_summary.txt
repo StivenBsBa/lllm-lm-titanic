@@ -1,0 +1,9 @@
+Resumen del Proyecto Titanic ML
+
+Este proyecto tiene como objetivo predecir la supervivencia de los pasajeros del Titanic.
+
+El modelo inicial utilizado es una Regresión Logística. El preprocesamiento incluye la imputación de valores faltantes en Age con la mediana y en Embarked con la moda. Las variables categóricas como Sex y Pclass se codifican mediante One-Hot Encoding.
+
+El análisis exploratorio de datos (EDA) mostró que el sexo y la clase del pasajero son los predictores más influyentes en la supervivencia: las mujeres y los pasajeros de primera clase tienen una probabilidad de supervivencia significativamente mayor.
+
+El modelo baseline alcanza un desempeño competitivo en el conjunto de validación, con una precisión cercana al 80%. Este valor puede variar dependiendo de los ajustes, el muestreo y futuros experimentos de optimización.

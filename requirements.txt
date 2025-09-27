@@ -1,0 +1,32 @@
+# Data & ML
+pandas
+numpy
+scikit-learn
+joblib
+matplotlib
+seaborn
+unstructured
+#  ML Ops / Vector Search / Transformers
+faiss-cpu
+sentence-transformers
+torch
+torchvision
+torchaudio
+#  API
+fastapi
+uvicorn[standard]
+python-dotenv
+
+#  Testing
+pytest
+
+#  Langchain ecosystem
+langchain
+langchain-community
+langchain-ollama
+
+#  Pydantic
+pydantic
+
+#  HTTP client
+httpx

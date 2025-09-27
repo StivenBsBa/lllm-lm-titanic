@@ -1,0 +1,28 @@
+# Entornos virtuales
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Datos
+data/raw/
+data/processed/
+
+# Modelos y artefactos de ML
+artifacts/
+*.joblib
+*.pkl
+
+# Logs y reportes
+*.log
+*.csv
+*.json
+
+# IDEs / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Pytest cache
+.pytest_cache/
+/vector_store
