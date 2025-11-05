@@ -20,7 +20,7 @@ Este repositorio contiene un proyecto completo de Machine Learning y LLM, desde 
 - **Lenguaje:** Python 3.10+
 - **Análisis y Modelado:** Pandas, Scikit-learn, NumPy
 - **API:** FastAPI, Uvicorn
-- **Componente LLM:** LangChain, Ollama, FAISS, Sentence-Transformers
+- **Componente LLM:** LangChain, Google Gemini API, FAISS, Sentence-Transformers
 - **Pruebas:** Pytest
 
 ---
@@ -80,6 +80,16 @@ Este repositorio contiene un proyecto completo de Machine Learning y LLM, desde 
 6. **Pruebas:** Pruebas automatizadas para asegurar la robustez del sistema.
 
 ## 🏗️ ¿Cómo se trabaja?
+
+### 0. Configuración de API Key de Google Gemini
+
+Antes de usar el sistema LLM, necesitas configurar tu API key de Google Gemini:
+
+1. Obtén tu API key desde [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Crea un archivo `.env` en la raíz del proyecto con:
+   ```
+   GOOGLE_API_KEY=tu_api_key_aqui
+   ```
 
 ### 1. Instalación de dependencias
 

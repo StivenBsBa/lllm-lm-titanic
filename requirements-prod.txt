@@ -4,32 +4,25 @@ uvicorn[standard]
 
 # --- Configuración y Seguridad ---
 python-dotenv
-# --- Bases de Datos ---
 
 # --- IA: Generación de Lenguaje ---
 google-generativeai
 langchain-google-genai
-openai
 
 # --- IA: Sistema RAG (Búsqueda Vectorial) ---
-# chromadb  # No se usa actualmente, comentado para reducir dependencias
 sentence-transformers
 langchain
 langchain-community
 faiss-cpu
+# unstructured es necesario para DirectoryLoader (puede ser pesado, pero necesario para cargar documentos)
+unstructured
+
+# --- ML y Análisis de Datos ---
+pandas
+scikit-learn
+joblib
 
 # --- Utilidades ---
 numpy
 requests
-sqlalchemy
-aiosmtplib
 
-# --- Testing ---
-pytest
-httpx
-pytest-asyncio
-aiohttp
-PyJWT
-pandas
-matplotlib
-seaborn

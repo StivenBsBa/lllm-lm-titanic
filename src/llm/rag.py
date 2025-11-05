@@ -1,12 +1,17 @@
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.llms import Ollama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.schema.output_parser import StrOutputParser
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno
+load_dotenv()
 
 # --- Configuración de Rutas ---
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -17,27 +22,38 @@ VECTOR_STORE_PATH = PROJECT_ROOT / "vector_store"
 def create_vector_store():
     """
     Crea y guarda una base de datos vectorial si no existe.
+    Verifica la existencia de los archivos específicos de FAISS, no solo el directorio.
     """
-    if VECTOR_STORE_PATH.exists():
+    # Verificar si los archivos de FAISS existen (index.faiss e index.pkl)
+    index_faiss = VECTOR_STORE_PATH / "index.faiss"
+    index_pkl = VECTOR_STORE_PATH / "index.pkl"
+
+    if index_faiss.exists() and index_pkl.exists():
         print("La base de datos vectorial ya existe. Omitiendo creación.")
         return
 
     print("Creando la base de datos vectorial...")
+    # Asegurar que el directorio existe
+    VECTOR_STORE_PATH.mkdir(parents=True, exist_ok=True)
+
     # Cargar los documentos de la base de conocimiento
     loader = DirectoryLoader(KNOWLEDGE_BASE_PATH, glob="**/*.txt")
     documents = loader.load()
+
+    if not documents:
+        raise ValueError(f"No se encontraron documentos en {KNOWLEDGE_BASE_PATH}")
 
     # Dividir los documentos en trozos más pequeños (chunks)
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = text_splitter.split_documents(documents)
 
     # Crear los embeddings (convierte texto a vectores)
-    # Usamos un modelo de Hugging Face que se ejecuta localmente en ollama
+    # Usamos un modelo de Hugging Face que se ejecuta localmente
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
-    # Crear la base de datos vectorial (FAISS) y guardarla localmente en ollama
+    # Crear la base de datos vectorial (FAISS) y guardarla localmente
     vector_store = FAISS.from_documents(chunks, embeddings)
     vector_store.save_local(str(VECTOR_STORE_PATH))
     print(f"Base de datos vectorial creada y guardada en: {VECTOR_STORE_PATH}")
@@ -46,7 +62,14 @@ def create_vector_store():
 def create_rag_chain():
     """
     Carga la base de datos vectorial y crea una cadena RAG para responder preguntas.
+    Si el vector store no existe, intenta crearlo primero.
     """
+    # Verificar si el vector store existe antes de cargarlo
+    index_faiss = VECTOR_STORE_PATH / "index.faiss"
+    if not index_faiss.exists():
+        print("Vector store no encontrado. Creándolo...")
+        create_vector_store()
+
     # Cargar los embeddings y la base de datos vectorial
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
@@ -58,14 +81,26 @@ def create_rag_chain():
     # Crear un "retriever" para buscar en la base de datos vectorial
     retriever = vector_store.as_retriever()
 
-    # Definir el LLM (usando Ollama con el modelo llama3)
-    llm = Ollama(model="llama3")
+    # Definir el LLM (usando Google Gemini)
+    # La API key debe estar configurada en la variable de entorno GOOGLE_API_KEY
+    google_api_key = os.getenv("GOOGLE_API_KEY")
+    if not google_api_key:
+        raise ValueError(
+            "GOOGLE_API_KEY no está configurada. Por favor, configura esta variable de entorno."
+        )
+
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.5-pro",
+        google_api_key=google_api_key,
+        temperature=0.7,
+        convert_system_message_to_human=True,
+    )
 
     template = """
     Responde la pregunta basándote únicamente en el siguiente contexto:
     {context}
 
-    Pregunta: {question}d
+    Pregunta: {question}
     """
     prompt = ChatPromptTemplate.from_template(template)
 

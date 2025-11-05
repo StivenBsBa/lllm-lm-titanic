@@ -1,0 +1,34 @@
+# Git metadata
+.git/
+.gitignore
+
+# Entornos virtuales y caches
+.venv/
+env/
+__pycache__/
+*.pyc
+.cache/
+
+
+
+
+
+
+
+
+
+
+# Archivos del SO/IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Ignorar todo por defecto y permitir solo lo necesario (comentado para flexibilidad)
+# !api/
+# !src/
+# !artifacts/
+# !knowledge_base/
+# !requirements.txt
+# !requirements-prod.txt
+# !Dockerfile
+# !docker-compose.yml

@@ -26,3 +26,10 @@ artifacts/
 # Pytest cache
 .pytest_cache/
 /vector_store
+
+# Variables de entorno
+.env
+
+# Caches y checkpoints
+.cache/
+**/.ipynb_checkpoints/

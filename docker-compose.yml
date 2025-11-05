@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: .
+    container_name: llm-titanic
+    ports:
+      - "5101:8000"  # Mapea puerto host 5101 al puerto 8000 del contenedor
+    env_file:
+      - .env
+    volumes:
+      # Montar solo directorios necesarios para desarrollo (opcional, para hot-reload)
+      - ./api:/app/api
+      - ./src:/app/src
+      - ./artifacts:/app/artifacts
+      - ./knowledge_base:/app/knowledge_base
+      - ./vector_store:/app/vector_store
+    restart: always
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
