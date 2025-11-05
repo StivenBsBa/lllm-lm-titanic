@@ -34,9 +34,18 @@ def make_prediction(input_data: dict):
 
     # Predicciones
     pred = model.predict(X)[0]
-    proba = model.predict_proba(X)[0][1]
+    proba = model.predict_proba(X)[0][1]  # probabilidad de sobrevivir
+
+    # Interpretación del resultado
+    if pred == 1:
+        status = "Sobrevive"
+    elif pred == 0:
+        status = "No sobrevive"
+    else:
+        status = "No identificado"
 
     return {
         "prediction": int(pred),
+        "status": status,
         "probability": float(proba * 100),  # convertir a porcentaje
     }
